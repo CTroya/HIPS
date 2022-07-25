@@ -1,82 +1,121 @@
+{% load static%}
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-    <style>
-        label {
-            font-family: "Comic Sans MS", cursive, sans-serif;
-            font-size: 20px;
-            color: rgb(217, 255, 0);
-        }
-
-        body {
-            background-color: rgb(255, 0, 200);
-        }
-
-        .form input {
-            font-family: "Helvetica", sans-serif;
-            outline: 0;
-            background: rgb(0, 119, 255);
-            width: 100%;
-            border: 0;
-            margin: 0 0 15px;
-            padding: 15px;
-            box-sizing: border-box;
-            font-size: 14px;
-            color: #fbff00;
-            font-family: "Comic Sans MS", cursive, sans-serif;
-        }
-
-        button {
-            font-family: "Comic Sans MS", cursive, sans-serif;
-            text-transform: uppercase;
-            outline: 0;
-            background: rgb(255, 0, 0);
-            width: 100%;
-            border: 10;
-            padding: 15px;
-            color: #d9ff00;
-            font-size: 14px;
-            -webkit-transition: all 0.3 ease;
-            transition: all 0.3 ease;
-            cursor: pointer;
-        }
-
-        textarea {
-            font-family: "Comic Sans MS", cursive, sans-serif;
-            text-transform: uppercase;
-            outline: 0;
-            background: rgb(251, 255, 0);
-            width: 100%;
-            border: 100;
-            padding: 15px;
-            color: #d9ff00;
-            font-size: 14px;
-            -webkit-transition: all 0.3 ease;
-            transition: all 0.3 ease;
-            cursor: pointer;
-        }
-
-        .center {
-            border: 5px solid #FFFF00;
-            text-align: center;
-        }
-    </style>
-
+  <meta charset="UTF-8">
+  <title>HIPS</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <style>
+    .msger{
+      border: 5px solid #FFFF00;
+      text-align: center;
+    }
+  </style>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 </head>
 
 <body>
-
-    <a href="/login/home">
-        <form action="POST">
-            <ol class="center"></ol>
-
-            </ol>
+  <!-- partial:index.partial.html -->
+  <section class="msger" class="center">
+    <header class="msger-header">
+      <div class="msger-header-title">
+        <form class="msger-inputarea" method="post">
+          <input type="text" class="msger-input" id="textInput" placeholder="Ingrese algun comando">
+          <button type="submit" class="msger-send-btn">Enviar</button>
         </form>
-    </a>
-    
+      </div>
+    </header>
+    <main class="msger-chat">
+      <div class="msg left-msg">
 
-    <textarea name="out" id="123" cols="30" rows="10" readonly> </textarea>
+        <div class="msg-bubble">
+          <div class="msg-info">
+            <div class="msg-info-name">HIPS-Alain Vega/Carlos Troya</div>
+            <div class="msg-info-time">12:45</div>
+          </div>
+
+          <div class="msg-text">
+            Consulte help para ver los comandos 😄
+          </div>
+        </div>
+      </div>
+
+    </main>
+
+
+  </section>
+  <!-- partial -->
+  <script src='https://use.fontawesome.com/releases/v5.0.13/js/all.js'></script>
+  <script>
+
+    const msgerForm = get(".msger-inputarea");
+    const msgerInput = get(".msger-input");
+    const msgerChat = get(".msger-chat");
+
+
+    // Icons made by Freepik from www.flaticon.com
+    const BOT_IMG = "https://freesvg.org/img/1538298822.png";
+    const PERSON_IMG = "https://svgsilh.com/svg/1633250.svg";
+    const BOT_NAME = "HIPSBOT";
+    const PERSON_NAME = "YO";
+
+    msgerForm.addEventListener("submit", event => {
+      event.preventDefault();
+
+      const msgText = msgerInput.value;
+      if (!msgText) return;
+
+      appendMessage(PERSON_NAME, PERSON_IMG, "right", msgText);
+      msgerInput.value = "";
+      botResponse(msgText);
+    });
+
+    function appendMessage(name, img, side, text) {
+      //   Simple solution for small apps
+      const msgHTML = `
+<div class="msg ${side}-msg">
+  ${name} - ${formatDate(new Date())}: ${text}
+</div>
+`;
+
+      msgerChat.insertAdjacentHTML("beforeend", msgHTML);
+      msgerChat.scrollTop += 500;
+    }
+
+    function botResponse(rawText) {
+
+      // Bot Response
+      $.get("../home/bruh", { msg: rawText }).done(function (data) {
+        console.log(rawText);
+        console.log(data);
+        const msgText = data;
+        appendMessage(BOT_NAME, BOT_IMG, "left", msgText);
+
+      });
+
+    }
+
+
+    // Utils
+    function get(selector, root = document) {
+      return root.querySelector(selector);
+    }
+
+    function formatDate(date) {
+      const h = "0" + date.getHours();
+      const m = "0" + date.getMinutes();
+
+      return `${h.slice(-2)}:${m.slice(-2)}`;
+    }
+
+
+
+  </script>
+
 </body>
 
 </html>
+<br>
