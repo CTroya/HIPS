@@ -3,7 +3,7 @@ from django.shortcuts import render, HttpResponse
 import subprocess
 # Create your views here.
 def HTML(msg):
-    html = '<p style = "color:black; font-family:Consolas; font-size: 12;" >%s</p>'%msg
+    html = '<p style = "color:#fbff00; font-family:Consolas; font-size: 12;" >%s</p>'%msg
     return html
 
 import subprocess

@@ -9,11 +9,52 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <style>
-    body{
-      background-color: pink;
-    }
+    
+    label {
+            font-family: "Comic Sans MS", cursive, sans-serif;
+            font-size: 20px;
+            color: rgb(217, 255, 0);
+        }
+
+        body {
+            background-color: rgb(0, 0, 0);
+        }
+
+         input {
+            font-family: "Helvetica", sans-serif;
+            outline: 0;
+            background: rgb(0, 0, 0);
+            width: 100%;
+            border: 0;
+            margin: 0 0 15px;
+            padding: 15px;
+            box-sizing: border-box;
+            font-size: 14px;
+            color: #fbff00;
+            font-family: "Comic Sans MS", cursive, sans-serif;
+        }
+
+        button {
+            font-family: "Comic Sans MS", cursive, sans-serif;
+            text-transform: uppercase;
+            outline: 0;
+            background: rgb(253, 165, 0);
+            width: 100%;
+            border: 0;
+            padding: 15px;
+            color: #d9ff00;
+            font-size: 14px;
+            -webkit-transition: all 0.3 ease;
+            transition: all 0.3 ease;
+            cursor: pointer;
+        }
+
+        .center {
+            border: 5px solid #FFFF00;
+            text-align: center;
+        }
     .msger{
-      border: 5px solid #FFFF00;
+      border: 5px solid #c57c0f;
       text-align: center;
     }
   </style>
@@ -21,8 +62,14 @@
 </head>
 
 <body>
+  
   <!-- partial:index.partial.html -->
   <section class="msger" class="center">
+    <div class="msg-bubble">
+      <div class="msg-info">
+        <div class="msg-info-name" style="color:#fbff00">HIPS-Alain Vega/Carlos Troya</div>
+        <div class="msg-info-time"></div>
+      </div>
     <header class="msger-header">
       <div class="msger-header-title">
         <form class="msger-inputarea" method="post">
@@ -31,18 +78,15 @@
         </form>
       </div>
     </header>
-    <main class="msger-chat">
-      <div class="msg left-msg">
-
-        <div class="msg-bubble">
-          <div class="msg-info">
-            <div class="msg-info-name">HIPS-Alain Vega/Carlos Troya</div>
-            <div class="msg-info-time"></div>
-          </div>
-    </main>
+    
 
 
   </section>
+  <main class="msger-chat" style="height: 600px;%;width:auto;overflow:scroll;background-color:#533f13;">
+    <div class="msg left-msg" >
+
+
+  </main>
   <!-- partial -->
   <script src='https://use.fontawesome.com/releases/v5.0.13/js/all.js'></script>
   <script>
