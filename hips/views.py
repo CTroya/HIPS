@@ -1,4 +1,3 @@
-from re import X
 from django.shortcuts import render, HttpResponse
 import subprocess
 # Create your views here.
@@ -9,7 +8,8 @@ def HTML(msg):
 import subprocess
 
 
-def usuarios_conectados():
+def usuarios_conectados(msg):
+    print(msg)
     resultado = subprocess.check_output("w",shell=True).decode('utf-8')
     #print(resultado.stdout.split('\n'))
     #for x in resultado.stdout.split('\n'):
@@ -20,16 +20,17 @@ def usuarios_conectados():
     for i in range(len(x)):
         x[i] = HTML(x[i])
     
-    print(x)
+    #print(x)
     return x #quizas nos sirva mas adelante, tenemos un string aca con la info
-
-usuarios_conectados()
 
 def home(request):
     return render(request, 'home.html')
 def bruh(request):
     input = request.GET['msg']
-    return HttpResponse(usuarios_conectados())
+    return HttpResponse(usuarios_conectados(input))
     
 def home(request):
     return render(request, 'home.html')
+def bruh(request):
+    input = request.GET['msg']
+    return HttpResponse(usuarios_conectados(input))
