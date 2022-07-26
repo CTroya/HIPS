@@ -26,7 +26,7 @@ def usuarios_conectados():
     except Exception:
        msg = "No se pudo mostrar los usuarios conectados"
        listamsg.append(HTML(msg))
-    return HTML(listamsg)
+    return listamsg
 def home(request):
     return render(request, 'home.html')
 def bruh(request):
