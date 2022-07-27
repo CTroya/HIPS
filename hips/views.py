@@ -1,5 +1,6 @@
 from django.shortcuts import render, HttpResponse
 import subprocess
+import funciones.bloquear_ip
 # Create your views here.
 def HTML(msg):
     html = '<p style = "color:#fbff00; font-family:Consolas; font-size: 12;" >%s</p>'%msg
@@ -26,7 +27,12 @@ def usuarios_conectados(msg):
 def home(request):
     return render(request, 'home.html')
 def bruh(request):
+    funclist = [
+        {1,usuarios_conectados},
+        {2,},
+    ]
     input = request.GET['msg']
+    
     return HttpResponse(usuarios_conectados(input))
     
 def home(request):
