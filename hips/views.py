@@ -53,22 +53,56 @@ def hashear_archivo(ruta_arvhivo):
             file_hash.update(fb) # Update the hash
             fb = f.read(BLOCK_SIZE) # Read the next block from the file
     return file_hash.hexdigest()
-
 #hasheado = hashear_archivo("/etc/passwd")
 #print(hasheado)
 
 
+from pathlib import Path
+import os.path
+# Te crea un txt en /home/alain/backups/hashes/(bin o etc) el hash para comparar
+# A ESTE HAY QUE LLAMARLE SI O SI ANTES PQ TE CREAR EL BACKUP DE LOS HASHES
+def backup_hash():
+    pathlist = Path('/bin/')
+    for path in pathlist.iterdir():
+        if not os.path.isdir(path):
+            f = open('//backups/hashes/bin/'+ path.name, 'w')
+            f.write(hashear_archivo(path))
+            f.close()
+    archivos_etc = ['/etc/passwd', '/etc/group', '/etc/shadow']
+    for archivo in archivos_etc:
+        f = open('/backups/hashes/etc/'+ archivo.split('/')[2], 'w')
+        f.write(hashear_archivo(archivo))
+        f.close()
 
-def verificar_archivo():
-    ruta_archivo = "/etc/passwd"
-    ruta_hash_antiguo = 'hips/hash'
-    with open(os.path.join(os.getcwd(),ruta_hash_antiguo)) as f:
-        contenido = f.read()
-    contenido = contenido.strip('\n') #le saco el \n que me trae al leer el hash del file
-    if contenido == hashear_archivo(ruta_archivo):
-        return "No se encontraron modificaciones en /etc/passwd"
+# Le pasas un archivo y la ruta donde esta el antiguo hash y compara el hash nuevo con el viejo
+def verificar_cambio_archivo(ruta_archivo, ruta_hash_antiguo):
+    with open(ruta_hash_antiguo) as f:
+        hash_antiguo = f.read()
+    hash_antiguo = hash_antiguo.strip('\n') #le saco el \n que me trae al leer el hash del file
+    if hash_antiguo == hashear_archivo(ruta_archivo):
+        return True # si el archivo no se cambio
     else:
-        return "Se encontraron modificaciones en /etc/passwd"
+        return False # si el archivo se cambio
+
+# Te mira todo el /bin y los /etc/passwd, /etc/shadow y /etc/group para saber si se cambio algo
+def verificar_binarios():
+    pathlist = Path('/bin/')
+    mensaje = ''
+    se_cambio_alguno = False
+    for path in pathlist.iterdir():
+        if not os.path.isdir(path):
+            if not verificar_cambio_archivo(path, '/backups/hashes/bin/' + path.name):
+                se_cambio_alguno = True
+                mensaje += 'El archivo: ' + str(path) + ' ha sido modificado\n'
+    ruta_archivos = ['/etc/passwd', '/etc/group', '/etc/shadow']
+    for ruta in ruta_archivos:
+        if not verificar_cambio_archivo(ruta, '/backups/hashes/etc/' + ruta.split('/')[2]):
+            se_cambio_alguno = True
+            mensaje += 'El archivo: ' + ruta + ' ha sido modificado\n'
+    if se_cambio_alguno:
+        return 'Se detecto la modificacion de:\n' + mensaje
+    else:
+        return 'No se detectaron cambios en los binarios, ni en el /etc/passwd, /etc/group, /etc/shadow'
 
 
 def verificar_ataque_DDOS_dns():
@@ -221,7 +255,7 @@ def home(request):
     return render(request, 'home.html')
 def bruh(request):
     funclist = {"1":usuarios_conectados,
-        "2":verificar_archivo,
+        "2":verificar_binarios,
         "3":verificar_ataque_DDOS_dns,
         "4":verificar_cron,
         "5":verificar_intento_acceso,
