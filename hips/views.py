@@ -1,6 +1,7 @@
 from django.shortcuts import render, HttpResponse
 import subprocess
 from requests import request
+from sqlalchemy import false
 
 from sympy import fu
 # Le pasas una ip como string y te bloquea la ip si es que no se bloqueo anteriormente
@@ -253,6 +254,8 @@ def usuarios_conectados():
 
 def home(request):
     return render(request, 'home.html')
+from django.core.mail import send_mail
+from hips.settings import *
 def bruh(request):
     funclist = {"1":usuarios_conectados,
         "2":verificar_binarios,
@@ -266,10 +269,12 @@ def bruh(request):
         "10":hashear_archivo}
     
     input = request.GET['msg']
+    print(input)
     if input in funclist:
-        print(input)
+        send_mail('Subject here','Here is the message',EMAIL_HOST,[RECIPIENT_ADDRESS],fail_silently=false)
+        #print(input)
         resultado = funclist[input]()
-        print(resultado)
+        #print(resultado)
         x = resultado.split('\n')
         #x.pop(0)
         #x.pop(-1)
@@ -278,4 +283,8 @@ def bruh(request):
         return HttpResponse(x)
     return HttpResponse(HTML(f"ERROR: \"{input}\" is not a command"))
 def home(request):
-    return render(request, 'home.html') 
+    return render(request, 'home.html')
+
+
+
+
