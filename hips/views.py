@@ -41,6 +41,11 @@ def bloquear_ip(ip):
 #ip = '80.80.80.80'
 #bloquear_ip(ip)
 
+# Le das el pid de un proceso y te lo mata
+def matar_proceso(pid):
+    subprocess.run(['kill', '-9', str(pid)], capture_output=True, text=True)
+    #print('Se mato al proceso: '+ str(pid))
+
 # Le pasas la ruta de un archivo y te retorna el hash en hexadecimal como un string
 import hashlib
 
@@ -296,27 +301,62 @@ def usuarios_conectados():
     #print(resultado.stdout.split('\n'))
     #for x in resultado.stdout.split('\n'):
     #    print(x)
-    
-    
     #print(x)
     return resultado #quizas nos sirva mas adelante, tenemos un string aca con la info
+
+
+def verificar_cola_correo():
+    cmd = "mailq"
+    resultado_cmd = os.popen(cmd).read()
+    mensaje = ''
+    if "queue is empty" in resultado_cmd:
+        #print("La cola esta vacia")
+        mensaje += "La cola esta vacia\n"
+    else:
+        resultado = resultado_cmd.splitlines()
+    mail_queue = resultado_cmd.splitlines()
+    if len(mail_queue) > 5: # elegir una cantidad adecuada
+        #print("Se encontraron muchos mails en la cola, se aviso al administrador")
+        mensaje += "Se encontraron muchos mails (" + str(len(mail_queue)) + ") en la cola, se aviso al administrador\n"
+    else:
+        #print('no se encontraron muchos mails en la cola')
+        mensaje += "No se encontraron muchos mails en la cola\n"
+    return mensaje
+
+def configuracion_inicial():
+    return 'Se ejecutaron varios scripts iniciales, el sistema esta listo'
+
+def ayuda():
+    mensaje = 'Los comandos son los siguientes:\n'
+    for llave, valor in funclist.items():
+        mensaje += str(llave) +': '+ str(valor.__name__) + '\n'
+    return mensaje
+
+def verificar_sniffers():
+    return 'falta hacer xd'
+
+def verificar_logs():
+    return 'falta hacer xd'
+
+funclist = {"1":verificar_binarios,
+        "2":usuarios_conectados,
+        "3":verificar_sniffers,
+        "4":verificar_logs,
+        "5":verificar_cola_correo,
+        "6":verificar_consumo_recursos,
+        "7":verificar_tmp,
+        "8":verificar_ataque_DDOS_dns,
+        "9":verificar_cron,
+        "10":verificar_intento_acceso,
+        "11":configuracion_inicial,
+        "12": ayuda}
 
 def home(request):
     return render(request, 'home.html')
 from django.core.mail import send_mail
 from hips.settings import *
-def bruh(request):
-    funclist = {"1":usuarios_conectados,
-        "2":verificar_binarios,
-        "3":verificar_ataque_DDOS_dns,
-        "4":verificar_cron,
-        "5":verificar_intento_acceso,
-        "6":verificar_tmp,
-        "7":bloquear_ip,
-        "8":check_cola_correo,
-        "9":esta_bloqueada,
-        "10":hashear_archivo}
     
+def bruh(request):
     input = request.GET['msg']
     print(input)
     if input in funclist:
