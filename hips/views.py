@@ -66,12 +66,12 @@ def backup_hash():
     pathlist = Path('/bin/')
     for path in pathlist.iterdir():
         if not os.path.isdir(path):
-            f = open('//backups/hashes/bin/'+ path.name, 'w')
+            f = open('/backup/hashes/bin/'+ path.name, 'w')
             f.write(hashear_archivo(path))
             f.close()
     archivos_etc = ['/etc/passwd', '/etc/group', '/etc/shadow']
     for archivo in archivos_etc:
-        f = open('/backups/hashes/etc/'+ archivo.split('/')[2], 'w')
+        f = open('/backup/hashes/etc/'+ archivo.split('/')[2], 'w')
         f.write(hashear_archivo(archivo))
         f.close()
 
