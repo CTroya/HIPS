@@ -107,21 +107,31 @@ def verificar_binarios():
 
 
 def verificar_ataque_DDOS_dns():
-    ruta_ataque_DDOS_dns= 'ataques/Ataque_DNS_tcpdump.txt' # atender esto
+    ruta_ataque_DDOS_dns= 'ataques/Ataque_DNS_tcpdump.txt' # atender esto 
     f = open(ruta_ataque_DDOS_dns,'r')
     ip_ataques = {} # diccionario con ip atacante y victima : cantidad de ataques
+    mensaje = ''
+    se_bloqueo_alguna_ip = False
     for linea in f:
         ip_atacante = linea.split()[2]
         ip_victima = linea.split()[4][:-1] # para sacar el : que tiene la ip de la victima del final
         if ((ip_atacante, ip_victima)) in ip_ataques:
             ip_ataques[(ip_atacante, ip_victima)] += 1
             if ip_ataques[(ip_atacante, ip_victima)] >= 5: # hay que elegir un numero adecuado
-                print('Se va a bloquear la ip: '+ ip_atacante + ' por sospecha de ataque a la ip: ' + ip_victima)
-                # bloquear_ip
+                se_bloqueo_alguna_ip = True
+                #print('Se va a bloquear la ip: '+ ip_atacante + ' por sospecha de ataque a la ip: ' + ip_victima)
+                mensaje += 'Se bloqueo la ip: ' + ip_atacante + ' por sospecha de ataque a la ip: ' + ip_victima + ' \n'
+                bloquear_ip(ip_atacante)
+                #avisar al admin
         else:
             ip_ataques[(ip_atacante, ip_victima)] = 1
-        mensaje = str(ip_ataques)
-    return mensaje
+        #registro = str(ip_ataques) es el diccionario en un string, quizas sea util
+    if se_bloqueo_alguna_ip:
+        return mensaje
+    else:
+        return 'No se detecto comportamiento parecido a un ataque DDOS'
+
+
 import os
 
 def check_cola_correo():
@@ -173,37 +183,46 @@ for linea in mensaje:
 
 from pathlib import Path
 
-def verificar_cron(ruta_del_cron):
-    directory = ruta_del_cron
+def verificar_cron():
+    directory = '/var/spool/cron/crontabs'
     pathlist = Path(directory)
+    mensaje = ''
     for path in pathlist.iterdir():
-        print('El usuario ' + path.name + ' tiene tareas en el cron, las cuales son:')
+        #print('El usuario ' + path.name + ' tiene tareas en el cron, las cuales son:')
+        mensaje += 'El usuario ' + path.name + ' tiene tareas en el cron, las cuales son: \n' 
         archivo = directory + '/' + path.name # completo la ruta del crontab de ese usuario
         f = open(archivo, "r") # ahora abro el archivo crontab del usuario
         for line in f:
             if line[0] != '#':
-                print(line)     # muestro que es lq tiene como tarea programada
+                mensaje += line + '\n'
+                #print(line)     # muestro que es lq tiene como tarea programada
         f.close()
+    return mensaje
 
-import subprocess
 
 def verificar_intento_acceso():
     resultado = subprocess.run(['bash', './checkear_intento_acceso.sh']) # ejecuto el script en bash
     f = open("intento_acceso.txt","r") # abro el archivo que me crea el script hecho en bash
     ip_intentos = {} # un diccionario con el ip y los intentos de ingreso
+    mensaje = ''
+    se_bloqueo_alguna_ip = False
     for line in f:
         ip = line.split()[10]
         if ip in ip_intentos: 
             ip_intentos[ip] += 1
             if ip_intentos[ip] == 10:
-                mensaje = 'la ip '+ip+ ' se va a bloquear porque intento muchas veces'
-                print(mensaje)
+                se_bloqueo_alguna_ip = True
+                mensaje += 'La ip '+ip+ ' se va a bloquear porque intento fallidamente acceder al sistema muchas veces\n'
+                # avisar al admin
+                #print(mensaje)
                 bloquear_ip(ip)
         else:
             ip_intentos[ip] = 1
     #print(ip_intentos) te muestra cuantas veces intento cada ip
-    return mensaje
-
+    if se_bloqueo_alguna_ip:
+        return mensaje
+    else:
+        return 'No se detectaron intentos fallidos de acceso al sistema'
 
 
 comando = "find /tmp/ -type f" #busco solo los archivos
