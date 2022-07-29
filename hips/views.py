@@ -237,7 +237,7 @@ def verificar_cron():
 
 def verificar_intento_acceso():
     resultado = subprocess.run(['bash', './checkear_intento_acceso.sh']) # ejecuto el script en bash
-    f = open("intento_acceso.txt","r") # abro el archivo que me crea el script hecho en bash
+    f = open("/intento_acceso.txt","r") # abro el archivo que me crea el script hecho en bash
     ip_intentos = {} # un diccionario con el ip y los intentos de ingreso
     mensaje = ''
     se_bloqueo_alguna_ip = False
@@ -247,9 +247,10 @@ def verificar_intento_acceso():
             ip_intentos[ip] += 1
             if ip_intentos[ip] == 10:
                 se_bloqueo_alguna_ip = True
-                mensaje += 'La ip '+ip+ ' se va a bloquear porque intento fallidamente acceder al sistema muchas veces\n'
+                mensaje += 'La ip ' + ip + ' se va a bloquear porque intento fallidamente acceder al sistema muchas veces\n'
                 # avisar al admin
-                #print(mensaje)
+                # dejar registro de la alarma en el log
+                # print(mensaje)
                 bloquear_ip(ip)
         else:
             ip_intentos[ip] = 1
@@ -333,7 +334,32 @@ def ayuda():
     return mensaje
 
 def verificar_sniffers():
-    return 'falta hacer xd'
+    sniffers = ['tcpdump','ethereal','wireshark','Ngrep','Snort'] # lista negra de sniffers
+    librerias = ['libpcat'] # posibles librerias que los snifffers usan regularmente
+    mensaje = ''
+    detectados = []
+    # Veo si algun sniffer esta ejecutandose
+    for sniffer in sniffers:
+        comando = f"ps -aux | grep {sniffer} | grep -v grep | awk '{{print $1, $2, $NF}}'"
+        resultado_comando = os.popen(comando).read().split('\n')
+        resultado_comando.pop(-1)
+        for resultado in resultado_comando:
+            #resultado.split()[0]  usuario
+            #resultado.split()[1]  pid
+            #resultado.split()[2]  programa
+            # avisar al admin
+            # poner en el registro de alarmas
+            # matar al proceso
+            matar_proceso(resultado.split()[1])
+            if not resultado.split()[2] in detectados:
+                detectados.append(resultado.split()[2])
+                mensaje += 'Se encontro el sniffer: ' + resultado.split()[2] + ' ejecutandose. Se envio el sniffer a cuarentena\n'            
+            # poner en cuarentena el sniffer
+    # Veo si existe alguna herramienta
+    if mensaje == '':
+        return 'No se detectaron sniffers en el sistema'
+    else:
+        return mensaje
 
 def verificar_logs():
     return 'falta hacer xd'
