@@ -6,7 +6,7 @@ from pathlib import Path
 from .registrar_en_log import registrar_en_log
 
 def verificar_cron():
-    directory = '/var/spool/cron/crontabs'
+    directory = '/var/spool/cron'
     pathlist = Path(directory)
     mensaje = ''
     for path in pathlist.iterdir():
