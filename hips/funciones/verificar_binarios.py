@@ -9,14 +9,14 @@ def verificar_binarios():
     se_cambio_alguno = False
     for path in pathlist.iterdir():
         if not os.path.isdir(path):
-            if not verificar_cambio_archivo(path, '/backups/hashes/bin/' + path.name):
+            if not verificar_cambio_archivo(path, '/backup/hashes/bin/' + path.name):
                 se_cambio_alguno = True
                 mensaje += 'El archivo: ' + str(path) + ' ha sido modificado\n'
                 registrar_en_log('alarmas','cambio en /bin','',
                 'El archivo: ' + str(path) + ' ha sido modificado')
     ruta_archivos = ['/etc/passwd', '/etc/group', '/etc/shadow']
     for ruta in ruta_archivos:
-        if not verificar_cambio_archivo(ruta, '/backups/hashes/etc/' + ruta.split('/')[2]):
+        if not verificar_cambio_archivo(ruta, '/backup/hashes/etc/' + ruta.split('/')[2]):
             se_cambio_alguno = True
             mensaje += 'El archivo: ' + ruta + ' ha sido modificado\n'
             registrar_en_log('alarmas','cambio en /etc','',
