@@ -5,22 +5,22 @@ from .hash_archivo import hashear_archivo
 def configuracion_inicial():
     # Creo el directorio y los .log para las alarmas y los modulos de prevencion
     if not os.path.isdir('/var/log/hips'):
-        os.mkdir('/var/log/hips')
-        if not os.path.isdir('/var/log/hips/alarmas.log'):  
-            f = open('/var/log/hips/alarmas.log', 'w')
-            f.close()
-        if not os.path.isdir('/var/log/hips/prevencion.log'):
-            f = open('/var/log/hips/prevencion.log', 'w')
-            f.close()
+        os.mkdir('/var/log/hips')    
+    if not os.path.isdir('/var/log/hips/alarmas.log'):  
+        f = open('/var/log/hips/alarmas.log', 'w')
+        f.close()
+    if not os.path.isdir('/var/log/hips/prevencion.log'):
+        f = open('/var/log/hips/prevencion.log', 'w')
+        f.close()
     # Creo los directorios para los backups que usamos de comparacion
     if not os.path.isdir('/backup'):
         os.mkdir('/backup')
-        if not os.path.isdir('/backup/hashes'):
-            os.mkdir('/backup/hashes')
-            if not os.path.isdir('/backup/hashes/bin'):
-                os.mkdir('/backup/hashes/bin')
-            if not os.path.isdir('/backup/hashes/etc'):
-                os.mkdir('/backup/hashes/etc')
+    if not os.path.isdir('/backup/hashes'):
+        os.mkdir('/backup/hashes')
+    if not os.path.isdir('/backup/hashes/bin'):
+        os.mkdir('/backup/hashes/bin')
+    if not os.path.isdir('/backup/hashes/etc'):
+        os.mkdir('/backup/hashes/etc')
     # Creo el directorio de cuarentena
     if not os.path.isdir('/cuarentena'):
         os.mkdir('/cuarentena')
