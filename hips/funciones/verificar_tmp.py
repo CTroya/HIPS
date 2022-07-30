@@ -1,10 +1,11 @@
 # Mira el directorio /tmp en busca de posibles scripts
 import subprocess
-from unittest import result
-
-comando = "find /tmp/ -type f" #busco solo los archivos
+#from unittest import result
+from .registrar_en_log import registrar_en_log
+from .cuarentena import cuarentena
 
 def verificar_tmp():
+    #busco solo los archivos
     resultado = subprocess.run(['find','/tmp/','-type', 'f'], 
     capture_output=True, text=True)
     archivos = resultado.stdout.split()
@@ -15,21 +16,26 @@ def verificar_tmp():
         if any(substring in archivo for substring in [ 
             ".cpp", ".py", ".c", ".exe", ".sh", ".ruby", ".php"
             ]):
-            #print('Se encontro un script llamado: '+ archivo + ' se tomaran acciones')
-            mensaje += 'Se encontro un script llamado: '+ archivo + ' se tomaran acciones\n'
-            # mover a cuarentena o eliminar (falta decidir que hacer)
+            cuarentena(archivo)
+            mensaje += 'Se encontro un script llamado: '+ archivo + ' se lo pondra en cuarentena\n'
+            registrar_en_log('prevencion','script en /tmp','',
+            'Se encontro un script llamado: '+ archivo + ' en el directorio /tmp. Se puso el script en cuarentena')
+            # avisar al admin
         else:
             f = open(archivo,'r')
             for linea in f:
                 if '#!' in linea:
-                    #print('Se encontro un script llamado: '+ f.name + ' se tomaran acciones')
-                    mensaje += 'Se encontro un script llamado: '+ archivo + ' se tomaran acciones\n'
-                    # eliminar o mover a cuarentena (falta decidir que hacer)
+                    cuarentena(archivo)
+                    mensaje += 'Se encontro un script llamado: '+ archivo + ' se lo pondra en cuarentena\n'
+                    registrar_en_log('prevencion','script en /tmp','',
+                    'Se encontro un script llamado: '+ archivo + ' en el directorio /tmp. Se puso el script en cuarentena')
+                    # avisar al admin
                     break
             f.close()
     if mensaje == '':
-        mensaje = 'No se encontraron scripts en el directorio /tmp'
-    return mensaje
+        return 'No se encontraron scripts en el directorio /tmp'
+    else:
+        return mensaje
 
 print(verificar_tmp())
 

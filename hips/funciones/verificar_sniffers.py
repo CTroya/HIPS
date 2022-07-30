@@ -1,5 +1,8 @@
 import os
-from matar_proceso import matar_proceso
+from .matar_proceso import matar_proceso
+from .registrar_en_log import registrar_en_log
+import subprocess
+from .cuarentena import cuarentena
 
 def verificar_sniffers():
     sniffers = ['tcpdump','ethereal','wireshark','Ngrep','Snort'] # lista negra de sniffers
@@ -13,20 +16,24 @@ def verificar_sniffers():
         resultado_comando.pop(-1)
         for resultado in resultado_comando:
             #resultado.split()[0]  usuario
-            #resultado.split()[1]  pid
-            #resultado.split()[2]  programa
-            # avisar al admin
-            # poner en el registro de alarmas
-            # matar al proceso
-            matar_proceso(resultado.split()[1])
-            if not resultado.split()[2] in detectados:
-                detectados.append(resultado.split()[2])
-                mensaje += 'Se encontro el sniffer: ' + resultado.split()[2] + ' ejecutandose. Se envio el sniffer a cuarentena\n'            
-            # poner en cuarentena el sniffer
+            pid = resultado.split()[1] 
+            programa = resultado.split()[2]
+            matar_proceso(pid)
+            if not programa in detectados:
+                detectados.append(programa)
+                ruta_sniffer = subprocess.run(['which',programa], capture_output=True, text=True)
+                print(ruta_sniffer.stdout.split()[0])
+                cuarentena(ruta_sniffer.stdout.split()[0])
+                mensaje += 'Se encontro el sniffer: ' + programa + ' ejecutandose. Se envio el sniffer a cuarentena\n'
+                registrar_en_log(
+                    'prevencion', 'sniffer encontrado', '',
+                    'Se encontro el sniffer: ' + programa + ' ejecutandose. Se envio el sniffer a cuarentena'
+                )
+                # avisar al admin
     # Veo si existe alguna herramienta
     if mensaje == '':
         return 'No se detectaron sniffers en el sistema'
     else:
         return mensaje
 
-print(verificar_sniffers())
+#print(verificar_sniffers())

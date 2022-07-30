@@ -1,6 +1,6 @@
 # Le pasas la ruta de un archivo y otra ruta donde esta el hash anterior de ese archivo
 # y te dice si se cambio o no el archivo
-from hash_archivo import hashear_archivo
+from .hash_archivo import hashear_archivo
 
 def verificar_cambio_archivo(ruta_archivo, ruta_hash_antiguo):
     with open(ruta_hash_antiguo) as f:

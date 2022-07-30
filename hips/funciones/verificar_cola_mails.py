@@ -1,4 +1,5 @@
 import os
+from .registrar_en_log import registrar_en_log
 
 def verificar_cola_correo():
     cmd = "mailq"
@@ -13,9 +14,12 @@ def verificar_cola_correo():
     if len(mail_queue) > 5: # elegir una cantidad adecuada
         #print("Se encontraron muchos mails en la cola, se aviso al administrador")
         mensaje += "Se encontraron muchos mails (" + str(len(mail_queue)) + ") en la cola, se aviso al administrador\n"
+        registrar_en_log('alarmas', 'cola correo','',
+        'Se detectaron muchos correos en la cola')
+        # avisar al admin
     else:
         #print('no se encontraron muchos mails en la cola')
         mensaje += "No se encontraron muchos mails en la cola\n"
     return mensaje
 
-verificar_cola_correo()
+#print(verificar_cola_correo())

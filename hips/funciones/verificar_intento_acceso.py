@@ -1,10 +1,11 @@
 
 import subprocess
-from bloquear_ip import bloquear_ip
+from .bloquear_ip import bloquear_ip
+from .registrar_en_log import registrar_en_log
 
 def verificar_intento_acceso():
     resultado = subprocess.run(['bash', './checkear_intento_acceso.sh']) # ejecuto el script en bash
-    f = open("intento_acceso.txt","r") # abro el archivo que me crea el script hecho en bash
+    f = open("/var/log/hips/intento_acceso.log","r") # abro el archivo que me crea el script hecho en bash
     ip_intentos = {} # un diccionario con el ip y los intentos de ingreso
     mensaje = ''
     se_bloqueo_alguna_ip = False
@@ -14,10 +15,11 @@ def verificar_intento_acceso():
             ip_intentos[ip] += 1
             if ip_intentos[ip] == 10:
                 se_bloqueo_alguna_ip = True
-                mensaje += 'La ip '+ip+ ' se va a bloquear porque intento fallidamente acceder al sistema muchas veces\n'
-                # avisar al admin
-                #print(mensaje)
+                mensaje += 'La ip ' + ip + ' se va a bloquear porque intento fallidamente acceder al sistema muchas veces\n'
                 bloquear_ip(ip)
+                registrar_en_log('prevencion','intento acceso',ip, 
+                'Se detecto muchos intentos de acceso fallidos. Se bloqueo la ip')
+                # avisar al admin
         else:
             ip_intentos[ip] = 1
     #print(ip_intentos) te muestra cuantas veces intento cada ip
@@ -26,9 +28,7 @@ def verificar_intento_acceso():
     else:
         return 'No se detectaron intentos fallidos de acceso al sistema'
 
-
-
-
+#print(verificar_intento_acceso())
 
 
 
