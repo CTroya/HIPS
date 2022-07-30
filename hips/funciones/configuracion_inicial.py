@@ -41,4 +41,3 @@ def configuracion_inicial():
         f.write(hash)
     return 'Se realizo la configuracion inicial, ya se puede utilizar el HIPS.'
 
-configuracion_inicial()
