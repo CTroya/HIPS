@@ -27,7 +27,7 @@ def verificar_ataque_DDOS_dns():
                         'Prevencion',
                         'Se detecto posible ataque DDOS. Se bloqueo la ip sospechosa',
                         EMAIL_HOST,
-                        RECIPIENT_ADDRESS,
+                        [RECIPIENT_ADDRESS],
                         fail_silently=False)
         else:
             ip_ataques[(ip_atacante, ip_victima)] = 1
