@@ -26,7 +26,7 @@ def verificar_tmp():
                 'Prevencion',
                 'Se encontro un script llamado: '+ archivo + ' en el directorio /tmp. Se puso el script en cuarentena',
                 EMAIL_HOST,
-                RECIPIENT_ADDRESS,
+                [RECIPIENT_ADDRESS],
                 fail_silently=False)
         else:
             f = open(archivo,'r')
@@ -40,7 +40,7 @@ def verificar_tmp():
                         'Prevencion',
                         'Se encontro un script llamado: '+ archivo + ' en el directorio /tmp. Se puso el script en cuarentena',
                         EMAIL_HOST,
-                        RECIPIENT_ADDRESS,
+                        [RECIPIENT_ADDRESS],
                         fail_silently=False)
                     break
             f.close()

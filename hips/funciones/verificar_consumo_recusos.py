@@ -35,7 +35,7 @@ def verificar_consumo_recursos():
                 'El proceso: ' + linea.split()[2] + ' esta consumiendo: ' 
                 + linea.split()[1] + '% de cpu. Se termino su ejecucion',
                 EMAIL_HOST,
-                RECIPIENT_ADDRESS,
+                [RECIPIENT_ADDRESS],
                 fail_silently=False)
     bandera = True
     # CONSUMO MEMORIA
@@ -60,7 +60,13 @@ def verificar_consumo_recursos():
             registrar_en_log('prevencion','consumo ram','',
             'El proceso: ' + linea.split()[2] + ' esta consumiendo: ' 
             + linea.split()[1] + '% de ram. Se termino su ejecucion')
-            # avisar al admin
+            send_mail(
+                'Prevencion',
+                'El proceso: ' + linea.split()[2] + ' esta consumiendo: ' 
+                + linea.split()[1] + '% de ram. Se termino su ejecucion',
+                EMAIL_HOST,
+                [RECIPIENT_ADDRESS],
+                fail_silently=False)
     if mensaje == '':
         return 'No se detecto consumos significativos de los recursos'
     else:

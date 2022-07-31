@@ -20,7 +20,7 @@ def verificar_binarios():
                     'Alarma',
                     'El archivo: ' + str(path) + ' ha sido modificado.',
                     EMAIL_HOST,
-                    RECIPIENT_ADDRESS,
+                    [RECIPIENT_ADDRESS],
                     fail_silently=False)
     ruta_archivos = ['/etc/passwd', '/etc/group', '/etc/shadow']
     for ruta in ruta_archivos:
@@ -33,7 +33,7 @@ def verificar_binarios():
                     'Alarma',
                     'El archivo: ' + ruta + ' ha sido modificado.',
                     EMAIL_HOST,
-                    RECIPIENT_ADDRESS,
+                    [RECIPIENT_ADDRESS],
                     fail_silently=False)
     if se_cambio_alguno:
         return 'Se detecto la modificacion de:\n' + mensaje

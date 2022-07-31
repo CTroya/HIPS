@@ -35,7 +35,7 @@ def verificar_sniffers():
                     'Prevencion',
                     'Se encontro el sniffer: ' + programa + ' ejecutandose. Se envio el sniffer a cuarentena',
                     EMAIL_HOST,
-                    RECIPIENT_ADDRESS,
+                    [RECIPIENT_ADDRESS],
                     fail_silently=False)
     if mensaje == '':
         return 'No se detectaron sniffers en el sistema'

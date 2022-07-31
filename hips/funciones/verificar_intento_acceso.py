@@ -25,7 +25,7 @@ def verificar_intento_acceso():
                         'Prevencion',
                         'Se detecto muchos intentos de acceso fallidos. Se bloqueo la ip',
                         EMAIL_HOST,
-                        RECIPIENT_ADDRESS,
+                        [RECIPIENT_ADDRESS],
                         fail_silently=False)
         else:
             ip_intentos[ip] = 1

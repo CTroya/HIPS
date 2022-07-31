@@ -26,7 +26,7 @@ def verificar_cron():
                         'Alarma',
                         'El usuario: ' + path.name + ' esta ejecutando como tarea de cron el script: ' + line.split()[8],
                         EMAIL_HOST,
-                        RECIPIENT_ADDRESS,
+                        [RECIPIENT_ADDRESS],
                         fail_silently=False)
         f.close()
     return mensaje

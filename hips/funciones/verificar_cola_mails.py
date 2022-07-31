@@ -22,7 +22,7 @@ def verificar_cola_correo():
                 'Alarma',
                 'Se detectaron muchos correos en la cola.',
                 EMAIL_HOST,
-                RECIPIENT_ADDRESS,
+                [RECIPIENT_ADDRESS],
                 fail_silently=False)
     else:
         #print('no se encontraron muchos mails en la cola')
