@@ -48,7 +48,6 @@ def bruh(request):
     input = request.GET['msg']
     print(input)
     if input in funclist:
-        send_mail('Subject here','Here is the message',EMAIL_HOST,[RECIPIENT_ADDRESS],fail_silently=false)
         resultado = funclist[input]()
         x = resultado.split('\n')
         for i in range(len(x)):
