@@ -7,7 +7,7 @@ from urllib3 import HTTPResponse
 from .funciones.verificar_binarios import verificar_binarios
 from .funciones.verificar_usuarios_conectados import verificar_usuarios_conectados
 from .funciones.verificar_sniffers import verificar_sniffers
-from .funciones.verificar_logs import verificar_logs
+from .funciones.verificar_ataque_SMTP import verificar_ataque_SMTP
 from .funciones.verificar_cola_mails import verificar_cola_correo
 from .funciones.verificar_consumo_recusos import verificar_consumo_recursos
 from .funciones.verificar_tmp import verificar_tmp
@@ -29,7 +29,7 @@ def ayuda():
 funclist = {"1":verificar_binarios,
         "2":verificar_usuarios_conectados,
         "3":verificar_sniffers,
-        "4":verificar_logs,
+        "4":verificar_ataque_SMTP,
         "5":verificar_cola_correo,
         "6":verificar_consumo_recursos,
         "7":verificar_tmp,
