@@ -10,6 +10,7 @@ def verificar_ataque_SMTP():
     resultado_comando.pop(-1)
     usuarios_contador = {}
     mensaje = ''
+    se_bloqueo_usuario = False
     for linea in resultado_comando:
         linea  = linea.split()
         usuario = linea[9].split("=")[1][:-1]
@@ -20,6 +21,7 @@ def verificar_ataque_SMTP():
             if usuarios_contador[usuario] == 50:
                 #procedemos a bloquar al usuario
                 bloquear_usuario(usuario)
+                se_bloqueo_usuario = True
                 mensaje += 'El usuario: ' + usuario + ' tiene muchas entradas de falla de autenticacion de SMTP. Se le cambio la contra'
                 registrar_en_log('prevencion','Ataque SMTP', '',
                 'El usuario: ' + usuario + ' tiene muchas entradas de falla de autenticacion de SMTP. Se le cambio la contra')
@@ -29,6 +31,10 @@ def verificar_ataque_SMTP():
                     EMAIL_HOST,
                     [RECIPIENT_ADDRESS],
                     fail_silently=False)
-                    
         else:
             usuarios_contador[usuario] = 1
+    if se_bloqueo_usuario:
+        return mensaje
+    else:
+        return 'No se detectaron ataques SMTP'
+    
