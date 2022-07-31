@@ -2,7 +2,7 @@ from asyncio import subprocess
 import os
 import shutil
 from pathlib import Path
-from hash_archivo import hashear_archivo
+from .hash_archivo import hashear_archivo
 
 def configuracion_inicial():
     # Creo el directorio y los .log para las alarmas y los modulos de prevencion
