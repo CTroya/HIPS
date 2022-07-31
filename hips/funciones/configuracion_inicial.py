@@ -1,6 +1,8 @@
+from asyncio import subprocess
 import os
+import shutil
 from pathlib import Path
-from .hash_archivo import hashear_archivo
+from hash_archivo import hashear_archivo
 
 def configuracion_inicial():
     # Creo el directorio y los .log para las alarmas y los modulos de prevencion
@@ -25,8 +27,10 @@ def configuracion_inicial():
     if not os.path.isdir('/cuarentena'):
         os.mkdir('/cuarentena')
     # Creo el directorio de ejemplos de ataques
+    print(os.getcwd() + '/Ataque_DNS_tcpdump.txt')
     if not os.path.isdir('/ataques'):
         os.mkdir('/ataques')
+        shutil.copy(os.getcwd() + '/Ataque_DNS_tcpdump.txt', '/ataques/Ataque_DNS_tcpdump.txt')
     # Creo los hashes de los binarios y del etc, shadow y group
     pathlist = Path('/bin/')
     for path in pathlist.iterdir():
@@ -41,3 +45,4 @@ def configuracion_inicial():
         f.write(hash)
     return 'Se realizo la configuracion inicial, ya se puede utilizar el HIPS.'
 
+configuracion_inicial()

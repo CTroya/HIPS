@@ -2,6 +2,8 @@
 import subprocess
 from .bloquear_ip import bloquear_ip
 from .registrar_en_log import registrar_en_log
+from django.core.mail import send_mail
+from ..settings import *
 
 def verificar_intento_acceso():
     resultado = subprocess.run(['bash', './checkear_intento_acceso.sh']) # ejecuto el script en bash
@@ -19,7 +21,12 @@ def verificar_intento_acceso():
                 bloquear_ip(ip)
                 registrar_en_log('prevencion','intento acceso',ip, 
                 'Se detecto muchos intentos de acceso fallidos. Se bloqueo la ip')
-                # avisar al admin
+                send_mail(
+                        'Prevencion',
+                        'Se detecto muchos intentos de acceso fallidos. Se bloqueo la ip',
+                        EMAIL_HOST,
+                        RECIPIENT_ADDRESS,
+                        fail_silently=False)
         else:
             ip_intentos[ip] = 1
     #print(ip_intentos) te muestra cuantas veces intento cada ip

@@ -1,5 +1,7 @@
 import os
 from .registrar_en_log import registrar_en_log
+from django.core.mail import send_mail
+from ..settings import *
 
 def verificar_cola_correo():
     cmd = "mailq"
@@ -16,7 +18,12 @@ def verificar_cola_correo():
         mensaje += "Se encontraron muchos mails (" + str(len(mail_queue)) + ") en la cola, se aviso al administrador\n"
         registrar_en_log('alarmas', 'cola correo','',
         'Se detectaron muchos correos en la cola')
-        # avisar al admin
+        send_mail(
+                'Alarma',
+                'Se detectaron muchos correos en la cola.',
+                EMAIL_HOST,
+                RECIPIENT_ADDRESS,
+                fail_silently=False)
     else:
         #print('no se encontraron muchos mails en la cola')
         mensaje += "No se encontraron muchos mails en la cola\n"

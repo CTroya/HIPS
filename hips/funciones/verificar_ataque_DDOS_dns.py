@@ -1,5 +1,7 @@
 from .bloquear_ip import bloquear_ip
 from .registrar_en_log import registrar_en_log
+from django.core.mail import send_mail
+from ..settings import *
 
 def verificar_ataque_DDOS_dns():
     ruta_ataque_DDOS_dns = '/ataques/Ataque_DNS_tcpdump.txt' # atender esto 
@@ -21,7 +23,12 @@ def verificar_ataque_DDOS_dns():
                     bloquear_ip(ip_atacante)
                     registrar_en_log('prevencion', 'ataque DDOS', ip_atacante,
                     'Se detecto posible ataque DDOS. Se bloqueo la ip sospechosa')
-                    #avisar al admin
+                    send_mail(
+                        'Prevencion',
+                        'Se detecto posible ataque DDOS. Se bloqueo la ip sospechosa',
+                        EMAIL_HOST,
+                        RECIPIENT_ADDRESS,
+                        fail_silently=False)
         else:
             ip_ataques[(ip_atacante, ip_victima)] = 1
         #registro = str(ip_ataques) es el diccionario en un string, quizas sea util

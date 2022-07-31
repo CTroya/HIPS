@@ -4,6 +4,8 @@
 
 from pathlib import Path
 from .registrar_en_log import registrar_en_log
+from django.core.mail import send_mail
+from ..settings import *
 
 def verificar_cron():
     directory = '/var/spool/cron'
@@ -20,7 +22,12 @@ def verificar_cron():
                 registrar_en_log('alarmas','cron','',
                 'El usuario: ' + path.name + ' esta ejecutando como tarea de cron el script: '
                 + line.split()[8])
-                # avisar al admin
+                send_mail(
+                        'Alarma',
+                        'El usuario: ' + path.name + ' esta ejecutando como tarea de cron el script: ' + line.split()[8],
+                        EMAIL_HOST,
+                        RECIPIENT_ADDRESS,
+                        fail_silently=False)
         f.close()
     return mensaje
 

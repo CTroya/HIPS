@@ -3,6 +3,8 @@ from .matar_proceso import matar_proceso
 from .registrar_en_log import registrar_en_log
 import subprocess
 from .cuarentena import cuarentena
+from django.core.mail import send_mail
+from ..settings import *
 
 def verificar_sniffers():
     sniffers = ['tcpdump','ethereal','wireshark','Ngrep','Snort'] # lista negra de sniffers
@@ -29,8 +31,12 @@ def verificar_sniffers():
                     'prevencion', 'sniffer encontrado', '',
                     'Se encontro el sniffer: ' + programa + ' ejecutandose. Se envio el sniffer a cuarentena'
                 )
-                # avisar al admin
-    # Veo si existe alguna herramienta
+                send_mail(
+                    'Prevencion',
+                    'Se encontro el sniffer: ' + programa + ' ejecutandose. Se envio el sniffer a cuarentena',
+                    EMAIL_HOST,
+                    RECIPIENT_ADDRESS,
+                    fail_silently=False)
     if mensaje == '':
         return 'No se detectaron sniffers en el sistema'
     else:

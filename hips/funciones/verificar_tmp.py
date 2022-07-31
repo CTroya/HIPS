@@ -3,6 +3,8 @@ import subprocess
 #from unittest import result
 from .registrar_en_log import registrar_en_log
 from .cuarentena import cuarentena
+from django.core.mail import send_mail
+from ..settings import *
 
 def verificar_tmp():
     #busco solo los archivos
@@ -20,7 +22,12 @@ def verificar_tmp():
             mensaje += 'Se encontro un script llamado: '+ archivo + ' se lo pondra en cuarentena\n'
             registrar_en_log('prevencion','script en /tmp','',
             'Se encontro un script llamado: '+ archivo + ' en el directorio /tmp. Se puso el script en cuarentena')
-            # avisar al admin
+            send_mail(
+                'Prevencion',
+                'Se encontro un script llamado: '+ archivo + ' en el directorio /tmp. Se puso el script en cuarentena',
+                EMAIL_HOST,
+                RECIPIENT_ADDRESS,
+                fail_silently=False)
         else:
             f = open(archivo,'r')
             for linea in f:
@@ -29,7 +36,12 @@ def verificar_tmp():
                     mensaje += 'Se encontro un script llamado: '+ archivo + ' se lo pondra en cuarentena\n'
                     registrar_en_log('prevencion','script en /tmp','',
                     'Se encontro un script llamado: '+ archivo + ' en el directorio /tmp. Se puso el script en cuarentena')
-                    # avisar al admin
+                    send_mail(
+                        'Prevencion',
+                        'Se encontro un script llamado: '+ archivo + ' en el directorio /tmp. Se puso el script en cuarentena',
+                        EMAIL_HOST,
+                        RECIPIENT_ADDRESS,
+                        fail_silently=False)
                     break
             f.close()
     if mensaje == '':
@@ -37,5 +49,5 @@ def verificar_tmp():
     else:
         return mensaje
 
-print(verificar_tmp())
+#print(verificar_tmp())
 

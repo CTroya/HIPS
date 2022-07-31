@@ -2,6 +2,8 @@
 import subprocess
 from .matar_proceso import matar_proceso
 from .registrar_en_log import registrar_en_log
+from django.core.mail import send_mail
+from ..settings import *
 
 def verificar_consumo_recursos():
     # CONSUMO CPU
@@ -28,7 +30,13 @@ def verificar_consumo_recursos():
             registrar_en_log('prevencion','consumo cpu','',
             'El proceso: ' + linea.split()[2] + ' esta consumiendo: ' 
             + linea.split()[1] + '% de cpu. Se termino su ejecucion')
-            # avisar al admin
+            send_mail(
+                'Prevencion',
+                'El proceso: ' + linea.split()[2] + ' esta consumiendo: ' 
+                + linea.split()[1] + '% de cpu. Se termino su ejecucion',
+                EMAIL_HOST,
+                RECIPIENT_ADDRESS,
+                fail_silently=False)
     bandera = True
     # CONSUMO MEMORIA
     comando_ps_mem = subprocess.run(['ps', 'aux', '--sort', '-%mem'],
